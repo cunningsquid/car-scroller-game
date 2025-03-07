@@ -19,6 +19,9 @@ car-scroller-game
 
 ```
 
+## What you need
+You will need a python environment installed and working on your computer to run this game as without python the game wont run. Pyrhon 3.12 is recommended.
+
 ## Installation
 1. Clone the repository:
    ```
