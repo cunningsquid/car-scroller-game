@@ -42,6 +42,7 @@ python src/main.py
 ## Controls
 - Use the left and right arrow keys or the A and D keys to move the car.
 - Avoid oncoming enemy cars to score points.
+- Gather fuel so you can keep driving.
 
 ## Contributing
 Feel free to submit issues or pull requests to improve the game!
