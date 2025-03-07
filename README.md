@@ -40,7 +40,7 @@ python src/main.py
 ```
 
 ## Controls
-- Use the left and right arrow keys to move the car.
+- Use the left and right arrow keys or the A and D keys to move the car.
 - Avoid oncoming enemy cars to score points.
 
 ## Contributing
