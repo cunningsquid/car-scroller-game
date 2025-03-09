@@ -129,10 +129,15 @@ def show_leaderboard(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, player_name, pla
     title_text = font.render("Leaderboard", True, (0, 0, 0))  # BLACK
     screen.blit(title_text, (SCREEN_WIDTH // 2 - title_text.get_width() // 2, 50))
 
+    # Display the player's score
+    player_score_text = font.render(f"Your Score: {player_score}", True, (0, 0, 0))  # BLACK
+    screen.blit(player_score_text, (SCREEN_WIDTH // 2 - player_score_text.get_width() // 2, 100))
+
+    # Display the leaderboard
     for i, entry in enumerate(leaderboard[:10]):
         color = (0, 255, 0) if entry['name'] == player_name and entry['score'] == player_score else (0, 0, 0)  # GREEN for player
         entry_text = font.render(f"{i + 1}. {entry['name']} - {entry['score']}", True, color)
-        screen.blit(entry_text, (SCREEN_WIDTH // 2 - entry_text.get_width() // 2, 100 + i * 30))
+        screen.blit(entry_text, (SCREEN_WIDTH // 2 - entry_text.get_width() // 2, 150 + i * 30))
 
     instructions_text = font.render("Press R to Restart or ESC to Quit", True, (0, 0, 0))  # BLACK
     screen.blit(instructions_text, (SCREEN_WIDTH // 2 - instructions_text.get_width() // 2, SCREEN_HEIGHT - 50))
