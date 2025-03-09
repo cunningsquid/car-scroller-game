@@ -3,7 +3,7 @@ import random
 import json
 import sys
 import os
-from menu import main_menu, get_player_name, show_leaderboard, save_leaderboard
+from menu import main_menu, get_player_name, show_leaderboard, save_leaderboard, pause_menu
 
 # Initialize Pygame
 pygame.init()
@@ -210,7 +210,7 @@ def main_game_loop():
             if event.type == pygame.QUIT:
                 ask_restart()
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                ask_restart()
+                pause_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT)
             elif event.type == SPAWN_ENEMY_EVENT:
                 enemy_car = EnemyCar()
                 all_sprites.add(enemy_car)

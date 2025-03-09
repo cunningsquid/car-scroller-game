@@ -151,3 +151,25 @@ def show_leaderboard(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, player_name, pla
                 elif event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     sys.exit()
+
+def pause_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT):
+    while True:
+        screen.fill((169, 169, 169))
+        title_text = font.render("Paused", True, (0, 0, 0))
+        resume_text = font.render("Press R to Resume", True, (0, 0, 0))
+        quit_text = font.render("Press ESC to Quit", True, (0, 0, 0))
+        screen.blit(title_text, (SCREEN_WIDTH // 2 - title_text.get_width() // 2, SCREEN_HEIGHT // 2 - 80))
+        screen.blit(resume_text, (SCREEN_WIDTH // 2 - resume_text.get_width() // 2, SCREEN_HEIGHT // 2 - 20))
+        screen.blit(quit_text, (SCREEN_WIDTH // 2 - quit_text.get_width() // 2, SCREEN_HEIGHT // 2 + 20))
+        pygame.display.flip()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_r:
+                    return
+                elif event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
