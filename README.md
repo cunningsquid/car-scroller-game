@@ -24,17 +24,17 @@ You will need a python environment installed and working on your computer to run
 
 ## Installation
 1. Clone the repository:
-   ```
-   git clone https://github.com/cunningsquid/car-scroller-game.git
-   ```
+	```
+	git clone https://github.com/cunningsquid/car-scroller-game.git
+	```
 2. Navigate to the project directory:
-   ```
-   cd car-scroller-game
-   ```
+	```
+	cd car-scroller-game
+	```
 3. Install the required dependencies:
-   ```
-   pip install -r requirements.txt
-   ```
+	```
+	pip install -r requirements.txt
+	```
 
 ## Running the Game
 To start the game, run the following command:
