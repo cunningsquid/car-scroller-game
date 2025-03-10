@@ -177,28 +177,6 @@ def game_over():
 
 	ask_restart()
 
-def handle_keydown_event(event):
-	if event.key == pygame.K_ESCAPE:
-		pause_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT)
-	elif event.key == pygame.K_y:
-		reset_game()
-	elif event.key == pygame.K_n or event.key == pygame.K_ESCAPE:
-		pygame.quit()
-		sys.exit()
-
-def handle_events():
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT:
-			ask_restart()
-		elif event.type == pygame.KEYDOWN:
-			handle_keydown_event(event)
-		elif event.type == SPAWN_ENEMY_EVENT:
-			spawn_enemy_car()
-		elif event.type == SPAWN_FUEL_EVENT:
-			spawn_fuel_item()
-		elif event.type == pygame.USEREVENT + 2:
-			increase_difficulty()
-
 def ask_restart():
 	screen.fill(GRAY)
 	ask_text = font.render("Do you want to restart? (Y/N)", True, BLACK)
@@ -211,27 +189,12 @@ def ask_restart():
 				pygame.quit()
 				sys.exit()  # Corrected line
 			elif event.type == pygame.KEYDOWN:
-				handle_keydown_event(event)
-
-def spawn_enemy_car():
-	enemy_car = EnemyCar()
-	all_sprites.add(enemy_car)
-	enemy_cars.add(enemy_car)
-	next_spawn_interval = random.randint(MIN_SPAWN_INTERVAL, MAX_SPAWN_INTERVAL)
-	pygame.time.set_timer(SPAWN_ENEMY_EVENT, next_spawn_interval)
-
-def spawn_fuel_item():
-	fuel_item = FuelItem()
-	while pygame.sprite.spritecollideany(fuel_item, enemy_cars) or pygame.sprite.spritecollideany(fuel_item, fuel_items):
-		fuel_item.rect.x = random.randint(0, SCREEN_WIDTH - fuel_item.rect.width)
-	all_sprites.add(fuel_item)
-	fuel_items.add(fuel_item)
-
-def increase_difficulty():
-	global MAX_ENEMY_CARS_AT_ONCE, MIN_SPAWN_INTERVAL, MAX_SPAWN_INTERVAL
-	MAX_ENEMY_CARS_AT_ONCE += 1
-	MIN_SPAWN_INTERVAL = max(100, MIN_SPAWN_INTERVAL - 100)
-	MAX_SPAWN_INTERVAL = max(300, MAX_SPAWN_INTERVAL - 200)
+				if event.key == pygame.K_y:
+					reset_game()
+					return
+				elif event.key == pygame.K_n or event.key == pygame.K_ESCAPE:
+					pygame.quit()
+					sys.exit()  # Corrected line
 
 def main_game_loop():
 	global running, score, score_increment_timer, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, ENEMY_CAR_SPEED, MAX_ENEMY_CARS_AT_ONCE, MIN_SPAWN_INTERVAL, MAX_SPAWN_INTERVAL
@@ -243,7 +206,29 @@ def main_game_loop():
 	SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN = main_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN)
 
 	while running:
-		handle_events()
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				ask_restart()
+			elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+				pause_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT)
+			elif event.type == SPAWN_ENEMY_EVENT:
+				enemy_car = EnemyCar()
+				all_sprites.add(enemy_car)
+				enemy_cars.add(enemy_car)
+				# Set the next spawn interval to a random value within an increasing range
+				next_spawn_interval = random.randint(MIN_SPAWN_INTERVAL, MAX_SPAWN_INTERVAL)
+				pygame.time.set_timer(SPAWN_ENEMY_EVENT, next_spawn_interval)
+			elif event.type == SPAWN_FUEL_EVENT:
+				fuel_item = FuelItem()
+				while pygame.sprite.spritecollideany(fuel_item, enemy_cars) or pygame.sprite.spritecollideany(fuel_item, fuel_items):
+					fuel_item.rect.x = random.randint(0, SCREEN_WIDTH - fuel_item.rect.width)
+				all_sprites.add(fuel_item)
+				fuel_items.add(fuel_item)
+			elif event.type == pygame.USEREVENT + 2:
+				# Increase the number of enemy cars and decrease spawn interval
+				MAX_ENEMY_CARS_AT_ONCE += 1
+				MIN_SPAWN_INTERVAL = max(100, MIN_SPAWN_INTERVAL - 100)
+				MAX_SPAWN_INTERVAL = max(300, MAX_SPAWN_INTERVAL - 200)
 
 		# Update sprites
 		all_sprites.update()

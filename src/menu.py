@@ -10,20 +10,6 @@ def load_settings():
 	except FileNotFoundError:
 		return {"SCREEN_WIDTH": 800, "SCREEN_HEIGHT": 600, "FULLSCREEN": False}
 
-def handle_main_menu_events():
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT:
-			pygame.quit()
-			sys.exit()
-		elif event.type == pygame.KEYDOWN:
-			if event.key == pygame.K_RETURN:
-				return "start"
-			elif event.key == pygame.K_o:
-				return "options"
-			elif event.key == pygame.K_ESCAPE:
-				pygame.quit()
-				sys.exit()
-
 def main_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN):
 	while True:
 		screen.fill((169, 169, 169))  # GRAY
@@ -37,29 +23,18 @@ def main_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN):
 		screen.blit(quit_text, (SCREEN_WIDTH // 2 - quit_text.get_width() // 2, SCREEN_HEIGHT // 2 + 60))
 		pygame.display.flip()
 
-		action = handle_main_menu_events()
-		if action == "start":
-			return SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN
-		elif action == "options":
-			SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, screen = options_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN)
-
-def handle_options_menu_events(current_resolution_index, resolutions, temp_fullscreen):
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT:
-			pygame.quit()
-			sys.exit()
-		elif event.type == pygame.KEYDOWN:
-			if event.key == pygame.K_LEFT:
-				current_resolution_index = (current_resolution_index - 1) % len(resolutions)
-			elif event.key == pygame.K_RIGHT:
-				current_resolution_index = (current_resolution_index + 1) % len(resolutions)
-			elif event.key == pygame.K_f:
-				temp_fullscreen = not temp_fullscreen
-			elif event.key == pygame.K_RETURN:
-				return "apply", current_resolution_index, temp_fullscreen
-			elif event.key == pygame.K_ESCAPE:
-				return "back", current_resolution_index, temp_fullscreen
-	return None, current_resolution_index, temp_fullscreen
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				pygame.quit()
+				sys.exit()
+			elif event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_RETURN:
+					return SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN
+				elif event.key == pygame.K_o:
+					SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, screen = options_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN)
+				elif event.key == pygame.K_ESCAPE:
+					pygame.quit()
+					sys.exit()
 
 def options_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN):
 	resolutions = [(800, 600), (1024, 768), (1280, 720), (1920, 1080)]
@@ -82,17 +57,28 @@ def options_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN):
 		screen.blit(instructions_text3, (SCREEN_WIDTH // 2 - instructions_text3.get_width() // 2, SCREEN_HEIGHT // 2 + 140))
 		pygame.display.flip()
 
-		action, current_resolution_index, temp_fullscreen = handle_options_menu_events(current_resolution_index, resolutions, temp_fullscreen)
-		temp_width, temp_height = resolutions[current_resolution_index]
-		if action == "apply":
-			SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN = temp_width, temp_height, temp_fullscreen
-			if FULLSCREEN:
-				screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN)
-			else:
-				screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-			save_settings(SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN)
-		elif action == "back":
-			return SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, screen
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				pygame.quit()
+				sys.exit()
+			elif event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_LEFT:
+					current_resolution_index = (current_resolution_index - 1) % len(resolutions)
+					temp_width, temp_height = resolutions[current_resolution_index]
+				elif event.key == pygame.K_RIGHT:
+					current_resolution_index = (current_resolution_index + 1) % len(resolutions)
+					temp_width, temp_height = resolutions[current_resolution_index]
+				elif event.key == pygame.K_f:
+					temp_fullscreen = not temp_fullscreen
+				elif event.key == pygame.K_RETURN:
+					SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN = temp_width, temp_height, temp_fullscreen
+					if FULLSCREEN:
+						screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN)
+					else:
+						screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+					save_settings(SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN)
+				elif event.key == pygame.K_ESCAPE:
+					return SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, screen
 
 def save_settings(SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN):
 	settings = {
@@ -102,21 +88,6 @@ def save_settings(SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN):
 	}
 	with open("settings.json", "w") as file:
 		json.dump(settings, file)
-
-def handle_get_player_name_events(player_name):
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT:
-			pygame.quit()
-			sys.exit()
-		elif event.type == pygame.KEYDOWN:
-			if event.key == pygame.K_RETURN:
-				return player_name.strip()[:15]  # Limit name to 15 characters
-			elif event.key == pygame.K_BACKSPACE:
-				player_name = player_name[:-1]
-			else:
-				if len(player_name) < 15:
-					player_name += event.unicode
-	return player_name
 
 def get_player_name(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT):
 	player_name = ""
@@ -130,9 +101,18 @@ def get_player_name(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT):
 		screen.blit(instructions_text, (SCREEN_WIDTH // 2 - instructions_text.get_width() // 2, SCREEN_HEIGHT // 2 + 20))
 		pygame.display.flip()
 
-		player_name = handle_get_player_name_events(player_name)
-		if isinstance(player_name, str) and len(player_name) <= 15:
-			return player_name
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				pygame.quit()
+				sys.exit()
+			elif event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_RETURN:
+					return player_name.strip()[:15]  # Limit name to 15 characters
+				elif event.key == pygame.K_BACKSPACE:
+					player_name = player_name[:-1]
+				else:
+					if len(player_name) < 15:
+						player_name += event.unicode
 
 def load_leaderboard(leaderboard_file):
 	if os.path.exists(leaderboard_file):
@@ -143,18 +123,6 @@ def load_leaderboard(leaderboard_file):
 def save_leaderboard(leaderboard, leaderboard_file):
 	with open(leaderboard_file, "w") as file:
 		json.dump(leaderboard, file, indent=4)
-
-def handle_show_leaderboard_events():
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT:
-			pygame.quit()
-			sys.exit()
-		elif event.type == pygame.KEYDOWN:
-			if event.key == pygame.K_r:
-				return True
-			elif event.key == pygame.K_ESCAPE:
-				pygame.quit()
-				sys.exit()
 
 def show_leaderboard(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, player_name, player_score):
 	leaderboard = load_leaderboard("leaderboard.json")
@@ -179,20 +147,16 @@ def show_leaderboard(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, player_name, pla
 
 	# Wait for player input
 	while True:
-		if handle_show_leaderboard_events():
-			return True
-
-def handle_pause_menu_events():
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT:
-			pygame.quit()
-			sys.exit()
-		elif event.type == pygame.KEYDOWN:
-			if event.key == pygame.K_r:
-				return "resume"
-			elif event.key == pygame.K_ESCAPE:
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
 				pygame.quit()
 				sys.exit()
+			elif event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_r:
+					return True
+				elif event.key == pygame.K_ESCAPE:
+					pygame.quit()
+					sys.exit()
 
 def pause_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT):
 	while True:
@@ -205,5 +169,13 @@ def pause_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT):
 		screen.blit(quit_text, (SCREEN_WIDTH // 2 - quit_text.get_width() // 2, SCREEN_HEIGHT // 2 + 20))
 		pygame.display.flip()
 
-		if handle_pause_menu_events() == "resume":
-			return
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				pygame.quit()
+				sys.exit()
+			elif event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_r:
+					return
+				elif event.key == pygame.K_ESCAPE:
+					pygame.quit()
+					sys.exit()
