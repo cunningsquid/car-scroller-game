@@ -3,7 +3,7 @@ import random
 import json
 import sys
 import os
-from menu import main_menu, get_player_name, show_leaderboard, save_leaderboard, pause_menu
+from menu import main_menu, get_player_name, show_leaderboard, save_leaderboard, pause_menu, car_select
 
 # Initialize Pygame
 pygame.init()
@@ -62,17 +62,24 @@ pygame.display.set_caption("Car Scroller Game")
 # Font for score display
 font = pygame.font.Font(None, 36)
 
-# Load player car image
-player_car_image = pygame.image.load(os.path.join("assets", "PlayerSprite.png"))
+# Load player car images
+player_car_images = {
+	"car1.png": pygame.image.load(os.path.join("assets", "car1.png")),
+	"car2.png": pygame.image.load(os.path.join("assets", "car2.png")),
+	"car3.png": pygame.image.load(os.path.join("assets", "car3.png"))
+}
 
 # Load enemy car image
 enemy_car_image = pygame.image.load(os.path.join("assets", "EnemySprite.png"))
+
+# Ensure selected_car matches the keys in player_car_images
+selected_car = car_select(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT)
 
 # Player car class
 class PlayerCar(pygame.sprite.Sprite):
 	def __init__(self):
 		super().__init__()
-		self.image = player_car_image
+		self.image = player_car_images[selected_car]
 		self.rect = self.image.get_rect()
 		self.rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT - 100)
 		self.fuel = 100  # Initial fuel level

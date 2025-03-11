@@ -16,11 +16,13 @@ def main_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN):
 		title_text = font.render("Car Scroller Game", True, (0, 0, 0))  
 		start_text = font.render("Press ENTER to Start", True, (0, 0, 0))
 		options_text = font.render("Press O for Options", True, (0, 0, 0))
+		car_select_text = font.render("Press C to Select Car", True, (0, 0, 0))
 		quit_text = font.render("Press ESC to Quit", True, (0, 0, 0))
-		screen.blit(title_text, (SCREEN_WIDTH // 2 - title_text.get_width() // 2, SCREEN_HEIGHT // 2 - 80))
-		screen.blit(start_text, (SCREEN_WIDTH // 2 - start_text.get_width() // 2, SCREEN_HEIGHT // 2 - 20))
-		screen.blit(options_text, (SCREEN_WIDTH // 2 - options_text.get_width() // 2, SCREEN_HEIGHT // 2 + 20))
-		screen.blit(quit_text, (SCREEN_WIDTH // 2 - quit_text.get_width() // 2, SCREEN_HEIGHT // 2 + 60))
+		screen.blit(title_text, (SCREEN_WIDTH // 2 - title_text.get_width() // 2, SCREEN_HEIGHT // 2 - 100))
+		screen.blit(start_text, (SCREEN_WIDTH // 2 - start_text.get_width() // 2, SCREEN_HEIGHT // 2 - 40))
+		screen.blit(options_text, (SCREEN_WIDTH // 2 - options_text.get_width() // 2, SCREEN_HEIGHT // 2))
+		screen.blit(car_select_text, (SCREEN_WIDTH // 2 - car_select_text.get_width() // 2, SCREEN_HEIGHT // 2 + 40))
+		screen.blit(quit_text, (SCREEN_WIDTH // 2 - quit_text.get_width() // 2, SCREEN_HEIGHT // 2 + 80))
 		pygame.display.flip()
 
 		for event in pygame.event.get():
@@ -32,6 +34,9 @@ def main_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN):
 					return SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN
 				elif event.key == pygame.K_o:
 					SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, screen = options_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN)
+				elif event.key == pygame.K_c:
+					selected_car = car_select(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT)
+					print(f"Selected Car: {selected_car}")  # You can handle the selected car as needed
 				elif event.key == pygame.K_ESCAPE:
 					pygame.quit()
 					sys.exit()
@@ -179,3 +184,42 @@ def pause_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT):
 				elif event.key == pygame.K_ESCAPE:
 					pygame.quit()
 					sys.exit()
+
+def car_select(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT):
+	car_images = {
+		"car1.png": pygame.image.load(os.path.join("assets", "car1.png")),
+		"car2.png": pygame.image.load(os.path.join("assets", "car2.png")),
+		"car3.png": pygame.image.load(os.path.join("assets", "car3.png"))
+	}
+	selected_car = "car1.png"
+	while True:
+		screen.fill((169, 169, 169))
+		title_text = font.render("Select Your Car", True, (0, 0, 0))
+		car1_text = font.render("Press 1 for Car 1", True, (0, 0, 0))
+		car2_text = font.render("Press 2 for Car 2", True, (0, 0, 0))
+		car3_text = font.render("Press 3 for Car 3", True, (0, 0, 0))
+		screen.blit(title_text, (SCREEN_WIDTH // 2 - title_text.get_width() // 2, SCREEN_HEIGHT // 2 - 80))
+		screen.blit(car1_text, (SCREEN_WIDTH // 2 - car1_text.get_width() // 2, SCREEN_HEIGHT // 2 - 20))
+		screen.blit(car2_text, (SCREEN_WIDTH // 2 - car2_text.get_width() // 2, SCREEN_HEIGHT // 2 + 20))
+		screen.blit(car3_text, (SCREEN_WIDTH // 2 - car3_text.get_width() // 2, SCREEN_HEIGHT // 2 + 60))
+		
+		# Display the selected car image
+		car_image = car_images[selected_car]
+		car_image_rect = car_image.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 150))
+		screen.blit(car_image, car_image_rect)
+		
+		pygame.display.flip()
+
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				pygame.quit()
+				sys.exit()
+			elif event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_1:
+					selected_car = "car1.png"
+				elif event.key == pygame.K_2:
+					selected_car = "car2.png"
+				elif event.key == pygame.K_3:
+					selected_car = "car3.png"
+				elif event.key == pygame.K_RETURN:
+					return selected_car
