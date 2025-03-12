@@ -43,6 +43,7 @@ To start the game, run the following command:
 ```
 python src/main.py
 ```
+Or double click main.py in the src folder.
 
 ## Controls
 - Use the left and right arrow keys or the A and D keys to move the car.
