@@ -11,7 +11,9 @@ car-scroller-game
 │   └── menu.py           # Menu logic of the game
 ├── assets
 │   ├── EnemySprite.png   # Enemy car sprite
-│   └── PlayerSprite.png  # Player car sprite
+│   ├── car1.png		  # Navy car
+│   ├── car2.png		  # Scarlet car
+│   └── car3.png		  # Dust car
 ├── requirements.txt      # Dependencies for the game
 ├── README.md             # Project documentation
 ├── leaderboard.json      # Leaderboard
