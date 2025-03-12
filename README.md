@@ -55,3 +55,4 @@ Feel free to submit issues or pull requests to improve the game!
 
 ## Credits
 Aim studios for the top down car sprites.
+https://aim-studios.itch.io/top-down-pixel-art-race-cars

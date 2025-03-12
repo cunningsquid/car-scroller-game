@@ -81,6 +81,11 @@
     },
     {
         "name": "Perrin",
+        "score": 139,
+        "car": "car1"
+    },
+    {
+        "name": "Perrin",
         "score": 138,
         "car": "car1"
     },
