@@ -129,7 +129,7 @@ def save_leaderboard(leaderboard, leaderboard_file):
 	with open(leaderboard_file, "w") as file:
 		json.dump(leaderboard, file, indent=4)
 
-def show_leaderboard(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, player_name, player_score):
+def show_leaderboard(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, player_name, player_score, selected_car):
 	leaderboard = load_leaderboard("leaderboard.json")
 	screen.fill((169, 169, 169))  # GRAY
 	title_text = font.render("Leaderboard", True, (0, 0, 0))  # BLACK
@@ -141,8 +141,8 @@ def show_leaderboard(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, player_name, pla
 
 	# Display the leaderboard
 	for i, entry in enumerate(leaderboard[:10]):
-		color = (0, 255, 0) if entry['name'] == player_name and entry['score'] == player_score else (0, 0, 0)  # GREEN for player
-		entry_text = font.render(f"{i + 1}. {entry['name']} - {entry['score']}", True, color)
+		color = (0, 255, 0) if entry['name'] == player_name and entry['score'] == player_score and entry['car'] == selected_car else (0, 0, 0)  # GREEN for player
+		entry_text = font.render(f"{i + 1}. {entry['name']} - {entry['score']} - {entry['car']}", True, color)
 		screen.blit(entry_text, (SCREEN_WIDTH // 2 - entry_text.get_width() // 2, 150 + i * 30))
 
 	instructions_text = font.render("Press R to Restart or ESC to Quit", True, (0, 0, 0))  # BLACK
@@ -187,11 +187,11 @@ def pause_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT):
 
 def car_select(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT):
 	car_images = {
-		"car1.png": pygame.image.load(os.path.join("assets", "car1.png")),
-		"car2.png": pygame.image.load(os.path.join("assets", "car2.png")),
-		"car3.png": pygame.image.load(os.path.join("assets", "car3.png"))
+		"car1": pygame.image.load(os.path.join("assets", "car1.png")),
+		"car2": pygame.image.load(os.path.join("assets", "car2.png")),
+		"car3": pygame.image.load(os.path.join("assets", "car3.png"))
 	}
-	selected_car = "car1.png"
+	selected_car = "car1"
 	while True:
 		screen.fill((169, 169, 169))
 		title_text = font.render("Select Your Car", True, (0, 0, 0))
@@ -216,10 +216,10 @@ def car_select(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT):
 				sys.exit()
 			elif event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_1:
-					selected_car = "car1.png"
+					selected_car = "car1"
 				elif event.key == pygame.K_2:
-					selected_car = "car2.png"
+					selected_car = "car2"
 				elif event.key == pygame.K_3:
-					selected_car = "car3.png"
+					selected_car = "car3"
 				elif event.key == pygame.K_RETURN:
 					return selected_car

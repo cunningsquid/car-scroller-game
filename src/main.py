@@ -64,9 +64,9 @@ font = pygame.font.Font(None, 36)
 
 # Load player car images
 player_car_images = {
-	"car1.png": pygame.image.load(os.path.join("assets", "car1.png")),
-	"car2.png": pygame.image.load(os.path.join("assets", "car2.png")),
-	"car3.png": pygame.image.load(os.path.join("assets", "car3.png"))
+	"car1": pygame.image.load(os.path.join("assets", "car1.png")),
+	"car2": pygame.image.load(os.path.join("assets", "car2.png")),
+	"car3": pygame.image.load(os.path.join("assets", "car3.png"))
 }
 
 # Load enemy car image
@@ -177,10 +177,10 @@ def game_over():
 	global running, leaderboard
 	# Game over, show leaderboard and get player name
 	player_name = get_player_name(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT)
-	leaderboard.append({"name": player_name, "score": score})
+	leaderboard.append({"name": player_name, "score": score, "car": selected_car})
 	leaderboard = sorted(leaderboard, key=lambda x: x["score"], reverse=True)
 	save_leaderboard(leaderboard, leaderboard_file)
-	show_leaderboard(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, player_name, score)
+	show_leaderboard(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, player_name, score, selected_car)
 
 	ask_restart()
 
@@ -194,14 +194,14 @@ def ask_restart():
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				pygame.quit()
-				sys.exit()  # Corrected line
+				sys.exit()
 			elif event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_y:
 					reset_game()
 					return
 				elif event.key == pygame.K_n or event.key == pygame.K_ESCAPE:
 					pygame.quit()
-					sys.exit()  # Corrected line
+					sys.exit()
 
 def main_game_loop():
 	global running, score, score_increment_timer, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, ENEMY_CAR_SPEED, MAX_ENEMY_CARS_AT_ONCE, MIN_SPAWN_INTERVAL, MAX_SPAWN_INTERVAL

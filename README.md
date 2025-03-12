@@ -49,3 +49,6 @@ python src/main.py
 
 ## Contributing
 Feel free to submit issues or pull requests to improve the game!
+
+## Credits
+Aim studios for the top down car sprites.
