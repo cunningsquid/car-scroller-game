@@ -7,17 +7,17 @@ This game is about dodging cars going in the wrong direction while gathering fue
 ```
 car-scroller-game
 ├── src
-│   ├── main.py           	# Entry point of the game
-│   └── menu.py           	# Menu logic of the game
+│   ├── main.py				# Entry point of the game
+│   └── menu.py				# Menu logic of the game
 ├── assets
-│   ├── EnemySprite.png   	# Enemy car sprite
-│   ├── car1.png		 	# Navy car
-│   ├── car2.png		  	# Scarlet car
-│   └── car3.png		  	# Dust car
-├── requirements.txt      	# Dependencies for the game
-├── README.md             	# Project documentation
-├── leaderboard.json      	# Leaderboard
-└── setting.json          	# Saved settings
+│   ├── EnemySprite.png		# Enemy car sprite
+│   ├── car1.png			# Navy car
+│   ├── car2.png			# Scarlet car
+│   └── car3.png			# Dust car
+├── requirements.txt		# Dependencies for the game
+├── README.md				# Project documentation
+├── leaderboard.json		# Leaderboard
+└── setting.json			# Saved settings
 
 ```
 
