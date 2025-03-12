@@ -70,7 +70,7 @@ player_car_images = {
 }
 
 # Load enemy car image
-enemy_car_image = pygame.image.load(os.path.join("assets", "EnemySprite.png"))
+enemy_car_image = pygame.image.load(os.path.join("assets", "EnemyCar.png"))
 
 # Ensure selected_car matches the keys in player_car_images
 selected_car = car_select(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT)

@@ -10,7 +10,7 @@ car-scroller-game
 │   ├── main.py				# Entry point of the game
 │   └── menu.py				# Menu logic of the game
 ├── assets
-│   ├── EnemySprite.png		# Enemy car sprite
+│   ├── EnemyCar.png		# Enemy car
 │   ├── car1.png			# Navy car
 │   ├── car2.png			# Scarlet car
 │   └── car3.png			# Dust car
