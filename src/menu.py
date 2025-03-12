@@ -35,7 +35,7 @@ def main_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN):
 				elif event.key == pygame.K_o:
 					SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, screen = options_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN)
 				elif event.key == pygame.K_c:
-					selected_car = car_select(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT)
+					selected_car = car_select(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, load_highest_score())
 					print(f"Selected Car: {selected_car}")  # You can handle the selected car as needed
 				elif event.key == pygame.K_ESCAPE:
 					pygame.quit()
@@ -185,27 +185,55 @@ def pause_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT):
 					pygame.quit()
 					sys.exit()
 
-def car_select(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT):
+def save_selected_car(selected_car):
+	settings = load_settings()
+	settings["selected_car"] = selected_car
+	with open("settings.json", "w") as file:
+		json.dump(settings, file)
+
+def load_selected_car():
+	settings = load_settings()
+	return settings.get("selected_car", "car1")
+
+def save_highest_score(highest_score):
+	settings = load_settings()
+	settings["highest_score"] = highest_score
+	with open("settings.json", "w") as file:
+		json.dump(settings, file)
+
+def load_highest_score():
+	settings = load_settings()
+	return settings.get("highest_score", 0)
+
+def car_select(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, highest_score):
 	car_images = {
 		"car1": pygame.image.load(os.path.join("assets", "car1.png")),
 		"car2": pygame.image.load(os.path.join("assets", "car2.png")),
 		"car3": pygame.image.load(os.path.join("assets", "car3.png"))
 	}
-	selected_car = "car1"
+	selected_car = load_selected_car()
+	unlocked_cars = ["car1"]
+	if highest_score >= 75:
+		unlocked_cars.append("car2")
+	if highest_score >= 150:
+		unlocked_cars.append("car3")
+
 	while True:
 		screen.fill((169, 169, 169))
 		title_text = font.render("Select Your Car", True, (0, 0, 0))
 		car1_text = font.render("Press 1 for Car 1", True, (0, 0, 0))
-		car2_text = font.render("Press 2 for Car 2", True, (0, 0, 0))
-		car3_text = font.render("Press 3 for Car 3", True, (0, 0, 0))
+		car2_text = font.render("Press 2 for Car 2", True, (0, 0, 0)) if "car2" in unlocked_cars else font.render("Car 2 (Locked)", True, (255, 0, 0))
+		car3_text = font.render("Press 3 for Car 3", True, (0, 0, 0)) if "car3" in unlocked_cars else font.render("Car 3 (Locked)", True, (255, 0, 0))
+		confirm_text = font.render("Press ENTER to Confirm", True, (0, 0, 0))
 		screen.blit(title_text, (SCREEN_WIDTH // 2 - title_text.get_width() // 2, SCREEN_HEIGHT // 2 - 80))
 		screen.blit(car1_text, (SCREEN_WIDTH // 2 - car1_text.get_width() // 2, SCREEN_HEIGHT // 2 - 20))
 		screen.blit(car2_text, (SCREEN_WIDTH // 2 - car2_text.get_width() // 2, SCREEN_HEIGHT // 2 + 20))
 		screen.blit(car3_text, (SCREEN_WIDTH // 2 - car3_text.get_width() // 2, SCREEN_HEIGHT // 2 + 60))
+		screen.blit(confirm_text, (SCREEN_WIDTH // 2 - confirm_text.get_width() // 2, SCREEN_HEIGHT // 2 + 100))
 		
 		# Display the selected car image
 		car_image = car_images[selected_car]
-		car_image_rect = car_image.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 150))
+		car_image_rect = car_image.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 200))
 		screen.blit(car_image, car_image_rect)
 		
 		pygame.display.flip()
@@ -217,9 +245,10 @@ def car_select(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT):
 			elif event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_1:
 					selected_car = "car1"
-				elif event.key == pygame.K_2:
+				elif event.key == pygame.K_2 and "car2" in unlocked_cars:
 					selected_car = "car2"
-				elif event.key == pygame.K_3:
+				elif event.key == pygame.K_3 and "car3" in unlocked_cars:
 					selected_car = "car3"
 				elif event.key == pygame.K_RETURN:
+					save_selected_car(selected_car)
 					return selected_car
