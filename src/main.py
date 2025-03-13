@@ -96,7 +96,7 @@ class PlayerCar(pygame.sprite.Sprite):
 		super().__init__()
 		self.image = player_car_images[selected_car]
 		self.rect = self.image.get_rect()
-		self.rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT - 100)
+		self.rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT - SCREEN_HEIGHT // 10)
 		self.fuel = 100  # Initial fuel level
 
 	def update(self):
