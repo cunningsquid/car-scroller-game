@@ -49,7 +49,7 @@ def main_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS):
 
 def options_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS):
 	options = ["Resolution", "Fullscreen", "Show FPS", "Back"]
-	resolutions = [(800, 600), (1024, 768), (1280, 720), (1920, 1080)]
+	resolutions = [(800, 600), (1024, 768), (1280, 720), (1366, 768), (1920, 1080), (2560, 1440), (3840, 2160)]
 	current_resolution_index = resolutions.index((SCREEN_WIDTH, SCREEN_HEIGHT))
 	selected_option = 0
 	temp_width, temp_height, temp_fullscreen, temp_show_fps = SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS
