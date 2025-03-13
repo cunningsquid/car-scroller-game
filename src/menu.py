@@ -11,18 +11,19 @@ def load_settings():
 		return {"SCREEN_WIDTH": 800, "SCREEN_HEIGHT": 600, "FULLSCREEN": False, "SHOW_FPS": False}
 
 def main_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS):
+	options = ["Start Game", "Options", "Select Car", "Quit"]
+	selected_option = 0
+
 	while True:
 		screen.fill((169, 169, 169))  # GRAY
 		title_text = font.render("Car Scroller Game", True, (0, 0, 0))  
-		start_text = font.render("Press ENTER to Start", True, (0, 0, 0))
-		options_text = font.render("Press O for Options", True, (0, 0, 0))
-		car_select_text = font.render("Press C to Select Car", True, (0, 0, 0))
-		quit_text = font.render("Press ESC to Quit", True, (0, 0, 0))
 		screen.blit(title_text, (SCREEN_WIDTH // 2 - title_text.get_width() // 2, SCREEN_HEIGHT // 2 - 100))
-		screen.blit(start_text, (SCREEN_WIDTH // 2 - start_text.get_width() // 2, SCREEN_HEIGHT // 2 - 40))
-		screen.blit(options_text, (SCREEN_WIDTH // 2 - options_text.get_width() // 2, SCREEN_HEIGHT // 2))
-		screen.blit(car_select_text, (SCREEN_WIDTH // 2 - car_select_text.get_width() // 2, SCREEN_HEIGHT // 2 + 40))
-		screen.blit(quit_text, (SCREEN_WIDTH // 2 - quit_text.get_width() // 2, SCREEN_HEIGHT // 2 + 80))
+
+		for i, option in enumerate(options):
+			color = (0, 0, 0) if i != selected_option else (255, 0, 0)
+			option_text = font.render(option, True, color)
+			screen.blit(option_text, (SCREEN_WIDTH // 2 - option_text.get_width() // 2, SCREEN_HEIGHT // 2 - 40 + i * 40))
+
 		pygame.display.flip()
 
 		for event in pygame.event.get():
@@ -31,39 +32,47 @@ def main_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS):
 				sys.exit()
 			elif event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_RETURN:
-					return SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS
-				elif event.key == pygame.K_o:
-					SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS, screen = options_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS)
-				elif event.key == pygame.K_c:
-					selected_car = car_select(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, load_highest_score())
-					print(f"Selected Car: {selected_car}")  # You can handle the selected car as needed
-				elif event.key == pygame.K_ESCAPE:
-					pygame.quit()
-					sys.exit()
+					if selected_option == 0:
+						return SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS
+					elif selected_option == 1:
+						SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS, screen = options_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS)
+					elif selected_option == 2:
+						selected_car = car_select(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, load_highest_score())
+						print(f"Selected Car: {selected_car}")  # You can handle the selected car as needed
+					elif selected_option == 3:
+						pygame.quit()
+						sys.exit()
+				elif event.key == pygame.K_UP:
+					selected_option = (selected_option - 1) % len(options)
+				elif event.key == pygame.K_DOWN:
+					selected_option = (selected_option + 1) % len(options)
 
 def options_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS):
+	options = ["Resolution", "Fullscreen", "Show FPS", "Back"]
 	resolutions = [(800, 600), (1024, 768), (1280, 720), (1920, 1080)]
 	current_resolution_index = resolutions.index((SCREEN_WIDTH, SCREEN_HEIGHT))
+	selected_option = 0
 	temp_width, temp_height, temp_fullscreen, temp_show_fps = SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS
 	
 	while True:
 		screen.fill((169, 169, 169))
 		title_text = font.render("Options", True, (0, 0, 0))
-		resolution_text = font.render(f"Resolution: {temp_width}x{temp_height}", True, (0, 0, 0))
-		fullscreen_text = font.render(f"Fullscreen: {'On' if temp_fullscreen else 'Off'}", True, (0, 0, 0))
-		fps_text = font.render(f"Show FPS: {'On' if temp_show_fps else 'Off'}", True, (0, 0, 0))
-		instructions_text1 = font.render("Press LEFT/RIGHT to change resolution", True, (0, 0, 0))
-		instructions_text2 = font.render("F to toggle fullscreen", True, (0, 0, 0))
-		instructions_text3 = font.render("P to toggle FPS counter", True, (0, 0, 0))
-		instructions_text4 = font.render("ENTER to apply, ESC to go back", True, (0, 0, 0))
 		screen.blit(title_text, (SCREEN_WIDTH // 2 - title_text.get_width() // 2, SCREEN_HEIGHT // 2 - 100))
-		screen.blit(resolution_text, (SCREEN_WIDTH // 2 - resolution_text.get_width() // 2, SCREEN_HEIGHT // 2 - 60))
-		screen.blit(fullscreen_text, (SCREEN_WIDTH // 2 - fullscreen_text.get_width() // 2, SCREEN_HEIGHT // 2 - 20))
-		screen.blit(fps_text, (SCREEN_WIDTH // 2 - fps_text.get_width() // 2, SCREEN_HEIGHT // 2 + 20))
-		screen.blit(instructions_text1, (SCREEN_WIDTH // 2 - instructions_text1.get_width() // 2, SCREEN_HEIGHT // 2 + 60))
-		screen.blit(instructions_text2, (SCREEN_WIDTH // 2 - instructions_text2.get_width() // 2, SCREEN_HEIGHT // 2 + 100))
-		screen.blit(instructions_text3, (SCREEN_WIDTH // 2 - instructions_text3.get_width() // 2, SCREEN_HEIGHT // 2 + 140))
-		screen.blit(instructions_text4, (SCREEN_WIDTH // 2 - instructions_text4.get_width() // 2, SCREEN_HEIGHT // 2 + 180))
+
+		for i, option in enumerate(options):
+			if option == "Resolution":
+				option_text = f"Resolution: {temp_width}x{temp_height}"
+			elif option == "Fullscreen":
+				option_text = f"Fullscreen: {'On' if temp_fullscreen else 'Off'}"
+			elif option == "Show FPS":
+				option_text = f"Show FPS: {'On' if temp_show_fps else 'Off'}"
+			else:
+				option_text = option
+
+			color = (0, 0, 0) if i != selected_option else (255, 0, 0)
+			option_text_rendered = font.render(option_text, True, color)
+			screen.blit(option_text_rendered, (SCREEN_WIDTH // 2 - option_text_rendered.get_width() // 2, SCREEN_HEIGHT // 2 - 60 + i * 40))
+
 		pygame.display.flip()
 
 		for event in pygame.event.get():
@@ -71,25 +80,26 @@ def options_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS
 				pygame.quit()
 				sys.exit()
 			elif event.type == pygame.KEYDOWN:
-				if event.key == pygame.K_LEFT:
-					current_resolution_index = (current_resolution_index - 1) % len(resolutions)
-					temp_width, temp_height = resolutions[current_resolution_index]
-				elif event.key == pygame.K_RIGHT:
-					current_resolution_index = (current_resolution_index + 1) % len(resolutions)
-					temp_width, temp_height = resolutions[current_resolution_index]
-				elif event.key == pygame.K_f:
-					temp_fullscreen = not temp_fullscreen
-				elif event.key == pygame.K_p:
-					temp_show_fps = not temp_show_fps
-				elif event.key == pygame.K_RETURN:
-					SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS = temp_width, temp_height, temp_fullscreen, temp_show_fps
-					if FULLSCREEN:
-						screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN)
-					else:
-						screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-					save_settings(SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS)
-				elif event.key == pygame.K_ESCAPE:
-					return SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS, screen
+				if event.key == pygame.K_RETURN:
+					if selected_option == 0:
+						current_resolution_index = (current_resolution_index + 1) % len(resolutions)
+						temp_width, temp_height = resolutions[current_resolution_index]
+					elif selected_option == 1:
+						temp_fullscreen = not temp_fullscreen
+					elif selected_option == 2:
+						temp_show_fps = not temp_show_fps
+					elif selected_option == 3:
+						SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS = temp_width, temp_height, temp_fullscreen, temp_show_fps
+						if FULLSCREEN:
+							screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN)
+						else:
+							screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+						save_settings(SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS)
+						return SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS, screen
+				elif event.key == pygame.K_UP:
+					selected_option = (selected_option - 1) % len(options)
+				elif event.key == pygame.K_DOWN:
+					selected_option = (selected_option + 1) % len(options)
 
 def save_settings(SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS):
 	settings = {
@@ -138,47 +148,63 @@ def save_leaderboard(leaderboard, leaderboard_file):
 
 def show_leaderboard(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, player_name, player_score, selected_car):
 	leaderboard = load_leaderboard("leaderboard.json")
-	screen.fill((169, 169, 169))  # GRAY
-	title_text = font.render("Leaderboard", True, (0, 0, 0))  # BLACK
-	screen.blit(title_text, (SCREEN_WIDTH // 2 - title_text.get_width() // 2, 50))
+	options = ["Restart", "Quit"]
+	selected_option = 0
 
-	# Display the player's score
-	player_score_text = font.render(f"Your Score: {player_score}", True, (0, 0, 0))  # BLACK
-	screen.blit(player_score_text, (SCREEN_WIDTH // 2 - player_score_text.get_width() // 2, 100))
-
-	# Display the leaderboard
-	for i, entry in enumerate(leaderboard[:10]):
-		color = (0, 255, 0) if entry['name'] == player_name and entry['score'] == player_score and entry['car'] == selected_car else (0, 0, 0)  # GREEN for player
-		entry_text = font.render(f"{i + 1}. {entry['name']} - {entry['score']} - {entry['car']}", True, color)
-		screen.blit(entry_text, (SCREEN_WIDTH // 2 - entry_text.get_width() // 2, 150 + i * 30))
-
-	instructions_text = font.render("Press R to Restart or ESC to Quit", True, (0, 0, 0))  # BLACK
-	screen.blit(instructions_text, (SCREEN_WIDTH // 2 - instructions_text.get_width() // 2, SCREEN_HEIGHT - 50))
-	
-	pygame.display.flip()
-
-	# Wait for player input
 	while True:
+		screen.fill((169, 169, 169))  # GRAY
+		title_text = font.render("Leaderboard", True, (0, 0, 0))  # BLACK
+		screen.blit(title_text, (SCREEN_WIDTH // 2 - title_text.get_width() // 2, 50))
+
+		# Display the player's score
+		player_score_text = font.render(f"Your Score: {player_score}", True, (0, 0, 0))  # BLACK
+		screen.blit(player_score_text, (SCREEN_WIDTH // 2 - player_score_text.get_width() // 2, 100))
+
+		# Display the leaderboard
+		for i, entry in enumerate(leaderboard[:10]):
+			color = (0, 255, 0) if entry['name'] == player_name and entry['score'] == player_score and entry['car'] == selected_car else (0, 0, 0)  # GREEN for player
+			entry_text = font.render(f"{i + 1}. {entry['name']} - {entry['score']} - {entry['car']}", True, color)
+			screen.blit(entry_text, (SCREEN_WIDTH // 2 - entry_text.get_width() // 2, 150 + i * 30))
+
+		# Display options
+		for i, option in enumerate(options):
+			color = (0, 0, 0) if i != selected_option else (255, 0, 0)
+			option_text = font.render(option, True, color)
+			screen.blit(option_text, (SCREEN_WIDTH // 2 - option_text.get_width() // 2, SCREEN_HEIGHT - 100 + i * 30))
+		
+		pygame.display.flip()
+
+		# Wait for player input
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				pygame.quit()
 				sys.exit()
 			elif event.type == pygame.KEYDOWN:
-				if event.key == pygame.K_r:
-					return True
-				elif event.key == pygame.K_ESCAPE:
-					pygame.quit()
-					sys.exit()
+				if event.key == pygame.K_RETURN:
+					if selected_option == 0:
+						return True
+					elif selected_option == 1:
+						pygame.quit()
+						sys.exit()
+				elif event.key == pygame.K_UP:
+					selected_option = (selected_option - 1) % len(options)
+				elif event.key == pygame.K_DOWN:
+					selected_option = (selected_option + 1) % len(options)
 
 def pause_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT):
+	options = ["Resume", "Quit"]
+	selected_option = 0
+
 	while True:
 		screen.fill((169, 169, 169))
 		title_text = font.render("Paused", True, (0, 0, 0))
-		resume_text = font.render("Press R to Resume", True, (0, 0, 0))
-		quit_text = font.render("Press ESC to Quit", True, (0, 0, 0))
 		screen.blit(title_text, (SCREEN_WIDTH // 2 - title_text.get_width() // 2, SCREEN_HEIGHT // 2 - 80))
-		screen.blit(resume_text, (SCREEN_WIDTH // 2 - resume_text.get_width() // 2, SCREEN_HEIGHT // 2 - 20))
-		screen.blit(quit_text, (SCREEN_WIDTH // 2 - quit_text.get_width() // 2, SCREEN_HEIGHT // 2 + 20))
+
+		for i, option in enumerate(options):
+			color = (0, 0, 0) if i != selected_option else (255, 0, 0)
+			option_text = font.render(f"Press {option[0]} to {option}", True, color)
+			screen.blit(option_text, (SCREEN_WIDTH // 2 - option_text.get_width() // 2, SCREEN_HEIGHT // 2 - 20 + i * 40))
+
 		pygame.display.flip()
 
 		for event in pygame.event.get():
@@ -186,11 +212,16 @@ def pause_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT):
 				pygame.quit()
 				sys.exit()
 			elif event.type == pygame.KEYDOWN:
-				if event.key == pygame.K_r:
-					return
-				elif event.key == pygame.K_ESCAPE:
-					pygame.quit()
-					sys.exit()
+				if event.key == pygame.K_RETURN:
+					if selected_option == 0:
+						return
+					elif selected_option == 1:
+						pygame.quit()
+						sys.exit()
+				elif event.key == pygame.K_UP:
+					selected_option = (selected_option - 1) % len(options)
+				elif event.key == pygame.K_DOWN:
+					selected_option = (selected_option + 1) % len(options)
 
 def save_selected_car(selected_car):
 	settings = load_settings()
@@ -224,22 +255,31 @@ def car_select(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, highest_score):
 		unlocked_cars.append("car2")
 	if highest_score >= 150:
 		unlocked_cars.append("car3")
+	car_options = ["Car 1", "Car 2", "Car 3"]
+	selected_option = car_options.index(f"Car {selected_car[-1]}")
 
 	while True:
 		screen.fill((169, 169, 169))
 		title_text = font.render("Select Your Car", True, (0, 0, 0))
-		car1_text = font.render("Press 1 for Car 1", True, (0, 0, 0))
-		car2_text = font.render("Press 2 for Car 2", True, (0, 0, 0)) if "car2" in unlocked_cars else font.render("Car 2 (Locked)", True, (255, 0, 0))
-		car3_text = font.render("Press 3 for Car 3", True, (0, 0, 0)) if "car3" in unlocked_cars else font.render("Car 3 (Locked)", True, (255, 0, 0))
-		confirm_text = font.render("Press ENTER to Confirm", True, (0, 0, 0))
 		screen.blit(title_text, (SCREEN_WIDTH // 2 - title_text.get_width() // 2, SCREEN_HEIGHT // 2 - 80))
-		screen.blit(car1_text, (SCREEN_WIDTH // 2 - car1_text.get_width() // 2, SCREEN_HEIGHT // 2 - 20))
-		screen.blit(car2_text, (SCREEN_WIDTH // 2 - car2_text.get_width() // 2, SCREEN_HEIGHT // 2 + 20))
-		screen.blit(car3_text, (SCREEN_WIDTH // 2 - car3_text.get_width() // 2, SCREEN_HEIGHT // 2 + 60))
+
+		for i, car in enumerate(car_options):
+			if car == "Car 2" and "car2" not in unlocked_cars:
+				car_text = "Car 2 (Locked)"
+			elif car == "Car 3" and "car3" not in unlocked_cars:
+				car_text = "Car 3 (Locked)"
+			else:
+				car_text = car
+
+			color = (0, 0, 0) if i != selected_option else (255, 0, 0)
+			car_text_rendered = font.render(car_text, True, color)
+			screen.blit(car_text_rendered, (SCREEN_WIDTH // 2 - car_text_rendered.get_width() // 2, SCREEN_HEIGHT // 2 - 20 + i * 40))
+
+		confirm_text = font.render("Press ENTER to Confirm", True, (0, 0, 0))
 		screen.blit(confirm_text, (SCREEN_WIDTH // 2 - confirm_text.get_width() // 2, SCREEN_HEIGHT // 2 + 100))
 		
 		# Display the selected car image
-		car_image = car_images[selected_car]
+		car_image = car_images[f"car{selected_option + 1}"]
 		car_image_rect = car_image.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 200))
 		screen.blit(car_image, car_image_rect)
 		
@@ -250,12 +290,13 @@ def car_select(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, highest_score):
 				pygame.quit()
 				sys.exit()
 			elif event.type == pygame.KEYDOWN:
-				if event.key == pygame.K_1:
-					selected_car = "car1"
-				elif event.key == pygame.K_2 and "car2" in unlocked_cars:
-					selected_car = "car2"
-				elif event.key == pygame.K_3 and "car3" in unlocked_cars:
-					selected_car = "car3"
-				elif event.key == pygame.K_RETURN:
+				if event.key == pygame.K_RETURN:
+					if (selected_option == 1 and "car2" not in unlocked_cars) or (selected_option == 2 and "car3" not in unlocked_cars):
+						continue
+					selected_car = f"car{selected_option + 1}"
 					save_selected_car(selected_car)
 					return selected_car
+				elif event.key == pygame.K_UP:
+					selected_option = (selected_option - 1) % len(car_options)
+				elif event.key == pygame.K_DOWN:
+					selected_option = (selected_option + 1) % len(car_options)
