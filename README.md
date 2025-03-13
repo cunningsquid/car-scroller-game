@@ -46,6 +46,7 @@ To start the game, run the following command:
 python src/main.py
 ```
 Or double click run.bat on windows
+
 Or make run.sh executable to run on linux and macos.
 
 ## Controls
