@@ -50,6 +50,7 @@ Or double click run.bat on windows
 Or make run.sh executable to run on linux and macos.
 
 ## Controls
+- Use the up and down arrow keys to navigate the menu.
 - Use the left and right arrow keys or the A and D keys to move the car.
 - Avoid oncoming enemy cars to score points.
 - Gather fuel so you can keep driving.

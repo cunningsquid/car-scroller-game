@@ -69,9 +69,9 @@ font = pygame.font.Font(None, 36)
 
 # Load player car images
 player_car_images = {
-	"car1": pygame.image.load(os.path.join("assets", "car1.png")),
-	"car2": pygame.image.load(os.path.join("assets", "car2.png")),
-	"car3": pygame.image.load(os.path.join("assets", "car3.png"))
+	"Navy": pygame.image.load(os.path.join("assets", "car1.png")),
+	"Scarlet": pygame.image.load(os.path.join("assets", "car2.png")),
+	"Dust": pygame.image.load(os.path.join("assets", "car3.png"))
 }
 
 # Load enemy car image
@@ -279,11 +279,11 @@ def main_game_loop():
 
 		# Unlock cars based on score
 		if score >= 150:
-			unlocked_cars = ["car1", "car2", "car3"]
+			unlocked_cars = ["Navy", "Scarlet", "Dust"]
 		elif score >= 75:
-			unlocked_cars = ["car1", "car2"]
+			unlocked_cars = ["Navy", "Scarlet"]
 		else:
-			unlocked_cars = ["car1"]
+			unlocked_cars = ["Navy"]
 
 		# Draw everything
 		screen.fill(GRAY)

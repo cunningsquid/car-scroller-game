@@ -245,18 +245,18 @@ def load_highest_score():
 
 def car_select(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, highest_score):
 	car_images = {
-		"car1": pygame.image.load(os.path.join("assets", "car1.png")),
-		"car2": pygame.image.load(os.path.join("assets", "car2.png")),
-		"car3": pygame.image.load(os.path.join("assets", "car3.png"))
+		"Navy": pygame.image.load(os.path.join("assets", "car1.png")),
+		"Scarlet": pygame.image.load(os.path.join("assets", "car2.png")),
+		"Dust": pygame.image.load(os.path.join("assets", "car3.png"))
 	}
 	selected_car = load_selected_car()
-	unlocked_cars = ["car1"]
+	unlocked_cars = ["Navy"]
 	if highest_score >= 75:
-		unlocked_cars.append("car2")
+		unlocked_cars.append("Scarlet")
 	if highest_score >= 150:
-		unlocked_cars.append("car3")
-	car_options = ["Car 1", "Car 2", "Car 3"]
-	selected_option = car_options.index(f"Car {selected_car[-1]}")
+		unlocked_cars.append("Dust")
+	car_options = ["Navy", "Scarlet", "Dust"]
+	selected_option = car_options.index(selected_car)
 
 	while True:
 		screen.fill((169, 169, 169))
@@ -264,10 +264,10 @@ def car_select(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, highest_score):
 		screen.blit(title_text, (SCREEN_WIDTH // 2 - title_text.get_width() // 2, SCREEN_HEIGHT // 2 - 80))
 
 		for i, car in enumerate(car_options):
-			if car == "Car 2" and "car2" not in unlocked_cars:
-				car_text = "Car 2 (Locked)"
-			elif car == "Car 3" and "car3" not in unlocked_cars:
-				car_text = "Car 3 (Locked)"
+			if car == "Scarlet" and "Scarlet" not in unlocked_cars:
+				car_text = "Scarlet (Locked)"
+			elif car == "Dust" and "Dust" not in unlocked_cars:
+				car_text = "Dust (Locked)"
 			else:
 				car_text = car
 
@@ -279,7 +279,7 @@ def car_select(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, highest_score):
 		screen.blit(confirm_text, (SCREEN_WIDTH // 2 - confirm_text.get_width() // 2, SCREEN_HEIGHT // 2 + 100))
 		
 		# Display the selected car image
-		car_image = car_images[f"car{selected_option + 1}"]
+		car_image = car_images[car_options[selected_option]]
 		car_image_rect = car_image.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 200))
 		screen.blit(car_image, car_image_rect)
 		
@@ -291,9 +291,9 @@ def car_select(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, highest_score):
 				sys.exit()
 			elif event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_RETURN:
-					if (selected_option == 1 and "car2" not in unlocked_cars) or (selected_option == 2 and "car3" not in unlocked_cars):
+					if (selected_option == 1 and "Scarlet" not in unlocked_cars) or (selected_option == 2 and "Dust" not in unlocked_cars):
 						continue
-					selected_car = f"car{selected_option + 1}"
+					selected_car = car_options[selected_option]
 					save_selected_car(selected_car)
 					return selected_car
 				elif event.key == pygame.K_UP:
