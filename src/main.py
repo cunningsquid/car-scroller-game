@@ -3,7 +3,7 @@ import random
 import json
 import sys
 import os
-from menu import main_menu, get_player_name, show_leaderboard, save_leaderboard, pause_menu, car_select, save_game_data, load_game_data
+from menu import main_menu, get_player_name, show_leaderboard, save_leaderboard, pause_menu, car_select, save_game_data, load_game_data, load_selected_car
 
 # Initialize Pygame
 pygame.init()
@@ -87,6 +87,8 @@ score = game_data.get("score", 0)
 if selected_car not in player_car_images:
 	selected_car = car_select(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, highest_score)
 	save_game_data({"selected_car": selected_car, "highest_score": highest_score, "score": score})
+else:
+	save_game_data({"selected_car": selected_car, "highest_score": highest_score, "score": score})
 
 # Player car class
 class PlayerCar(pygame.sprite.Sprite):
@@ -106,6 +108,10 @@ class PlayerCar(pygame.sprite.Sprite):
 		self.fuel -= FUEL_DECREASE_RATE  # Decrease fuel over time
 		if self.fuel <= 0:
 			self.kill()  # End the game if fuel runs out
+
+	def set_image(self, car_image):
+		self.image = car_image
+		self.rect = self.image.get_rect(center=self.rect.center)
 
 # Enemy car class
 class EnemyCar(pygame.sprite.Sprite):
@@ -170,7 +176,7 @@ else:
 	leaderboard = []
 
 def reset_game():
-	global all_sprites, enemy_cars, fuel_items, player_car, score, ENEMY_CAR_SPEED, MAX_ENEMY_CARS_AT_ONCE, MIN_SPAWN_INTERVAL, MAX_SPAWN_INTERVAL, running
+	global all_sprites, enemy_cars, fuel_items, player_car, score, ENEMY_CAR_SPEED, MAX_ENEMY_CARS_AT_ONCE, MIN_SPAWN_INTERVAL, MAX_SPAWN_INTERVAL, running, selected_car
 	all_sprites.empty()
 	enemy_cars.empty()
 	fuel_items.empty()
@@ -187,7 +193,7 @@ def reset_game():
 	running = True
 
 def game_over():
-	global running, leaderboard, highest_score
+	global running, leaderboard, highest_score, selected_car
 	# Save the highest score
 	if score > highest_score:
 		highest_score = score
@@ -224,7 +230,7 @@ def ask_restart():
 					sys.exit()
 
 def main_game_loop():
-	global running, score, score_increment_timer, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, ENEMY_CAR_SPEED, MAX_ENEMY_CARS_AT_ONCE, MIN_SPAWN_INTERVAL, MAX_SPAWN_INTERVAL, SHOW_FPS
+	global running, score, score_increment_timer, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, ENEMY_CAR_SPEED, MAX_ENEMY_CARS_AT_ONCE, MIN_SPAWN_INTERVAL, MAX_SPAWN_INTERVAL, SHOW_FPS, selected_car
 	running = True
 	clock = pygame.time.Clock()
 	score = 0
@@ -312,6 +318,12 @@ def main_game_loop():
 
 		# Increase enemy car speed over time, but cap it at MAX_ENEMY_CAR_SPEED
 		ENEMY_CAR_SPEED = min(MAX_ENEMY_CAR_SPEED, ENEMY_CAR_SPEED + SPEED_INCREMENT * clock.get_time() / 1000.0)
+
+		# Update player car image if selected car changes
+		new_selected_car = load_selected_car()
+		if new_selected_car != selected_car:
+			selected_car = new_selected_car
+			player_car.set_image(player_car_images[selected_car])
 
 while True:
 	main_game_loop()

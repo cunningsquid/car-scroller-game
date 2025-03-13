@@ -202,7 +202,7 @@ def pause_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT):
 
 		for i, option in enumerate(options):
 			color = (0, 0, 0) if i != selected_option else (255, 0, 0)
-			option_text = font.render(f"Press {option[0]} to {option}", True, color)
+			option_text = font.render(f"{option}", True, color)
 			screen.blit(option_text, (SCREEN_WIDTH // 2 - option_text.get_width() // 2, SCREEN_HEIGHT // 2 - 20 + i * 40))
 
 		pygame.display.flip()
