@@ -17,8 +17,8 @@ car-scroller-game
 ├── leaderboard.json		# Leaderboard
 ├── README.md			# Project documentation
 ├── requirements.txt		# Dependencies for the game
-├── run.bat				# Windows start file
-└── run.sh				# Linux start file
+├── run.bat			# Windows start file
+└── run.sh			# Linux start file
 
 ```
 
