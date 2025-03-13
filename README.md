@@ -8,10 +8,10 @@ This game is about dodging cars going in the wrong direction while gathering fue
 ```
 car-scroller-game
 ├── assets
-│   ├── EnemyCar.png		# Enemy car
 │   ├── car1.png		# Navy car
 │   ├── car2.png		# Scarlet car
-│   └── car3.png		# Dust car
+│   ├── car3.png		# Dust car
+│   └── EnemyCar.png		# Enemy car
 ├── src
 │   ├── main.py			# Entry point of the game
 │   └── menu.py			# Menu logic of the game
