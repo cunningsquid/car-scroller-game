@@ -14,10 +14,11 @@ car-scroller-game
 ├── src
 │   ├── main.py			# Entry point of the game
 │   └── menu.py			# Menu logic of the game
-├── requirements.txt		# Dependencies for the game
-├── README.md			# Project documentation
 ├── leaderboard.json		# Leaderboard
-└── setting.json		# Saved settings
+├── README.md			# Project documentation
+├── requirements.txt		# Dependencies for the game
+├── run.bat				# Windows start file
+└── run.sh				# Linux start file
 
 ```
 
