@@ -8,9 +8,9 @@ def load_settings():
 		with open("settings.json", "r") as file:
 			return json.load(file)
 	except FileNotFoundError:
-		return {"SCREEN_WIDTH": 800, "SCREEN_HEIGHT": 600, "FULLSCREEN": False}
+		return {"SCREEN_WIDTH": 800, "SCREEN_HEIGHT": 600, "FULLSCREEN": False, "SHOW_FPS": False}
 
-def main_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN):
+def main_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS):
 	while True:
 		screen.fill((169, 169, 169))  # GRAY
 		title_text = font.render("Car Scroller Game", True, (0, 0, 0))  
@@ -31,9 +31,9 @@ def main_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN):
 				sys.exit()
 			elif event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_RETURN:
-					return SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN
+					return SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS
 				elif event.key == pygame.K_o:
-					SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, screen = options_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN)
+					SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS, screen = options_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS)
 				elif event.key == pygame.K_c:
 					selected_car = car_select(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, load_highest_score())
 					print(f"Selected Car: {selected_car}")  # You can handle the selected car as needed
@@ -41,25 +41,29 @@ def main_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN):
 					pygame.quit()
 					sys.exit()
 
-def options_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN):
+def options_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS):
 	resolutions = [(800, 600), (1024, 768), (1280, 720), (1920, 1080)]
 	current_resolution_index = resolutions.index((SCREEN_WIDTH, SCREEN_HEIGHT))
-	temp_width, temp_height, temp_fullscreen = SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN
+	temp_width, temp_height, temp_fullscreen, temp_show_fps = SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS
 	
 	while True:
 		screen.fill((169, 169, 169))
 		title_text = font.render("Options", True, (0, 0, 0))
 		resolution_text = font.render(f"Resolution: {temp_width}x{temp_height}", True, (0, 0, 0))
 		fullscreen_text = font.render(f"Fullscreen: {'On' if temp_fullscreen else 'Off'}", True, (0, 0, 0))
+		fps_text = font.render(f"Show FPS: {'On' if temp_show_fps else 'Off'}", True, (0, 0, 0))
 		instructions_text1 = font.render("Press LEFT/RIGHT to change resolution", True, (0, 0, 0))
 		instructions_text2 = font.render("F to toggle fullscreen", True, (0, 0, 0))
-		instructions_text3 = font.render("ENTER to apply, ESC to go back", True, (0, 0, 0))
-		screen.blit(title_text, (SCREEN_WIDTH // 2 - title_text.get_width() // 2, SCREEN_HEIGHT // 2 - 80))
-		screen.blit(resolution_text, (SCREEN_WIDTH // 2 - resolution_text.get_width() // 2, SCREEN_HEIGHT // 2 - 20))
-		screen.blit(fullscreen_text, (SCREEN_WIDTH // 2 - fullscreen_text.get_width() // 2, SCREEN_HEIGHT // 2 + 20))
+		instructions_text3 = font.render("P to toggle FPS counter", True, (0, 0, 0))
+		instructions_text4 = font.render("ENTER to apply, ESC to go back", True, (0, 0, 0))
+		screen.blit(title_text, (SCREEN_WIDTH // 2 - title_text.get_width() // 2, SCREEN_HEIGHT // 2 - 100))
+		screen.blit(resolution_text, (SCREEN_WIDTH // 2 - resolution_text.get_width() // 2, SCREEN_HEIGHT // 2 - 60))
+		screen.blit(fullscreen_text, (SCREEN_WIDTH // 2 - fullscreen_text.get_width() // 2, SCREEN_HEIGHT // 2 - 20))
+		screen.blit(fps_text, (SCREEN_WIDTH // 2 - fps_text.get_width() // 2, SCREEN_HEIGHT // 2 + 20))
 		screen.blit(instructions_text1, (SCREEN_WIDTH // 2 - instructions_text1.get_width() // 2, SCREEN_HEIGHT // 2 + 60))
 		screen.blit(instructions_text2, (SCREEN_WIDTH // 2 - instructions_text2.get_width() // 2, SCREEN_HEIGHT // 2 + 100))
 		screen.blit(instructions_text3, (SCREEN_WIDTH // 2 - instructions_text3.get_width() // 2, SCREEN_HEIGHT // 2 + 140))
+		screen.blit(instructions_text4, (SCREEN_WIDTH // 2 - instructions_text4.get_width() // 2, SCREEN_HEIGHT // 2 + 180))
 		pygame.display.flip()
 
 		for event in pygame.event.get():
@@ -75,21 +79,24 @@ def options_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN):
 					temp_width, temp_height = resolutions[current_resolution_index]
 				elif event.key == pygame.K_f:
 					temp_fullscreen = not temp_fullscreen
+				elif event.key == pygame.K_p:
+					temp_show_fps = not temp_show_fps
 				elif event.key == pygame.K_RETURN:
-					SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN = temp_width, temp_height, temp_fullscreen
+					SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS = temp_width, temp_height, temp_fullscreen, temp_show_fps
 					if FULLSCREEN:
 						screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN)
 					else:
 						screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-					save_settings(SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN)
+					save_settings(SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS)
 				elif event.key == pygame.K_ESCAPE:
-					return SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, screen
+					return SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS, screen
 
-def save_settings(SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN):
+def save_settings(SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS):
 	settings = {
 		"SCREEN_WIDTH": SCREEN_WIDTH,
 		"SCREEN_HEIGHT": SCREEN_HEIGHT,
-		"FULLSCREEN": FULLSCREEN
+		"FULLSCREEN": FULLSCREEN,
+		"SHOW_FPS": SHOW_FPS
 	}
 	with open("settings.json", "w") as file:
 		json.dump(settings, file)

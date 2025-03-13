@@ -17,13 +17,18 @@ else:
 	settings = {
 		"SCREEN_WIDTH": 800,
 		"SCREEN_HEIGHT": 600,
-		"FULLSCREEN": False
+		"FULLSCREEN": False,
+		"SHOW_FPS": False
 	}
+
+# Ensure all keys are present in settings
+settings.setdefault("SHOW_FPS", False)
 
 # Screen dimensions and fullscreen setting
 SCREEN_WIDTH = settings["SCREEN_WIDTH"]
 SCREEN_HEIGHT = settings["SCREEN_HEIGHT"]
 FULLSCREEN = settings["FULLSCREEN"]
+SHOW_FPS = settings["SHOW_FPS"]
 
 # Colors
 WHITE = (255, 255, 255)
@@ -217,13 +222,13 @@ def ask_restart():
 					sys.exit()
 
 def main_game_loop():
-	global running, score, score_increment_timer, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, ENEMY_CAR_SPEED, MAX_ENEMY_CARS_AT_ONCE, MIN_SPAWN_INTERVAL, MAX_SPAWN_INTERVAL
+	global running, score, score_increment_timer, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, ENEMY_CAR_SPEED, MAX_ENEMY_CARS_AT_ONCE, MIN_SPAWN_INTERVAL, MAX_SPAWN_INTERVAL, SHOW_FPS
 	running = True
 	clock = pygame.time.Clock()
 	score = 0
 	score_increment_timer = 0
 
-	SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN = main_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN)
+	SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS = main_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN, SHOW_FPS)
 
 	while running:
 		for event in pygame.event.get():
@@ -291,6 +296,11 @@ def main_game_loop():
 		# Draw the fuel gauge
 		fuel_text = font.render(f"Fuel: {int(player_car.fuel)}%", True, BLACK)
 		screen.blit(fuel_text, (10, 40))
+
+		 # Draw the FPS counter if enabled
+		if SHOW_FPS:
+			fps_text = font.render(f"FPS: {int(clock.get_fps())}", True, BLACK)
+			screen.blit(fps_text, (SCREEN_WIDTH - 100, 10))
 
 		# Flip the display
 		pygame.display.flip()

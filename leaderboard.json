@@ -311,6 +311,11 @@
     },
     {
         "name": "Perrin",
+        "score": 24,
+        "car": "car2"
+    },
+    {
+        "name": "Perrin",
         "score": 23,
         "car": "car1"
     },
