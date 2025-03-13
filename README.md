@@ -19,7 +19,8 @@ car-scroller-game
 ├── README.md			# Project documentation
 ├── requirements.txt		# Dependencies for the game
 ├── run.bat			# Windows start file
-└── run.sh			# Linux start file
+├── run.sh			# Linux start file
+└── settings.json		# Settings for the game
 
 ```
 
