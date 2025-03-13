@@ -15,6 +15,11 @@
         "car": "car1"
     },
     {
+        "name": "Perrin",
+        "score": 207,
+        "car": "car2"
+    },
+    {
         "name": "Tobian",
         "score": 192,
         "car": "car1"
