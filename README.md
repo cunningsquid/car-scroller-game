@@ -3,6 +3,7 @@
 ## Overview
 This game is about dodging cars going in the wrong direction while gathering fuel to not break down on the road.
 
+<!-- Don't change the tabs as it will look bad on the GitHub page. They are like this for a reason and keep them 2 tabs. -->
 ## Project Structure
 ```
 car-scroller-game
