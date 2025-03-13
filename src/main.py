@@ -3,7 +3,7 @@ import random
 import json
 import sys
 import os
-from menu import main_menu, get_player_name, show_leaderboard, save_leaderboard, pause_menu, car_select, save_game_data, load_game_data, load_selected_car
+from menu import *
 
 # Initialize Pygame
 pygame.init()
