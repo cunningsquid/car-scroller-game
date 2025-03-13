@@ -224,24 +224,22 @@ def pause_menu(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT):
 					selected_option = (selected_option + 1) % len(options)
 
 def save_selected_car(selected_car):
-	settings = load_settings()
-	settings["selected_car"] = selected_car
-	with open("settings.json", "w") as file:
-		json.dump(settings, file)
+	game_data = load_game_data()
+	game_data["selected_car"] = selected_car
+	save_game_data(game_data)
 
 def load_selected_car():
-	settings = load_settings()
-	return settings.get("selected_car", "car1")
+	game_data = load_game_data()
+	return game_data.get("selected_car", "Navy")
 
 def save_highest_score(highest_score):
-	settings = load_settings()
-	settings["highest_score"] = highest_score
-	with open("settings.json", "w") as file:
-		json.dump(settings, file)
+	game_data = load_game_data()
+	game_data["highest_score"] = highest_score
+	save_game_data(game_data)
 
 def load_highest_score():
-	settings = load_settings()
-	return settings.get("highest_score", 0)
+	game_data = load_game_data()
+	return game_data.get("highest_score", 0)
 
 def car_select(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, highest_score):
 	car_images = {
@@ -300,3 +298,13 @@ def car_select(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, highest_score):
 					selected_option = (selected_option - 1) % len(car_options)
 				elif event.key == pygame.K_DOWN:
 					selected_option = (selected_option + 1) % len(car_options)
+
+def save_game_data(data):
+	with open("game_data.json", "w") as file:
+		json.dump(data, file)
+
+def load_game_data():
+	if os.path.exists("game_data.json"):
+		with open("game_data.json", "r") as file:
+			return json.load(file)
+	return {}

@@ -3,7 +3,7 @@ import random
 import json
 import sys
 import os
-from menu import main_menu, get_player_name, show_leaderboard, save_leaderboard, pause_menu, car_select, save_selected_car, load_selected_car, save_highest_score, load_highest_score
+from menu import main_menu, get_player_name, show_leaderboard, save_leaderboard, pause_menu, car_select, save_game_data, load_game_data
 
 # Initialize Pygame
 pygame.init()
@@ -77,16 +77,16 @@ player_car_images = {
 # Load enemy car image
 enemy_car_image = pygame.image.load(os.path.join("assets", "EnemyCar.png"))
 
-# Load highest score from settings
-highest_score = load_highest_score()
-
-# Load selected car from settings
-selected_car = load_selected_car()
+# Load highest score, selected car, and score from game data
+game_data = load_game_data()
+highest_score = game_data.get("highest_score", 0)
+selected_car = game_data.get("selected_car", "Navy")
+score = game_data.get("score", 0)
 
 # Ensure selected_car matches the keys in player_car_images
 if selected_car not in player_car_images:
 	selected_car = car_select(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, highest_score)
-	save_selected_car(selected_car)
+	save_game_data({"selected_car": selected_car, "highest_score": highest_score, "score": score})
 
 # Player car class
 class PlayerCar(pygame.sprite.Sprite):
@@ -188,17 +188,19 @@ def reset_game():
 
 def game_over():
 	global running, leaderboard, highest_score
+	# Save the highest score
+	if score > highest_score:
+		highest_score = score
+
+	# Save game data
+	save_game_data({"selected_car": selected_car, "highest_score": highest_score, "score": score})
+
 	# Game over, show leaderboard and get player name
 	player_name = get_player_name(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT)
 	leaderboard.append({"name": player_name, "score": score, "car": selected_car})
 	leaderboard = sorted(leaderboard, key=lambda x: x["score"], reverse=True)
 	save_leaderboard(leaderboard, leaderboard_file)
 	show_leaderboard(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, player_name, score, selected_car)
-
-	# Save the highest score
-	if score > highest_score:
-		highest_score = score
-		save_highest_score(highest_score)
 
 	ask_restart()
 
