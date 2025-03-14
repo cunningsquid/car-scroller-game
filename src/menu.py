@@ -263,9 +263,9 @@ def car_select(screen, font, SCREEN_WIDTH, SCREEN_HEIGHT, highest_score):
 
 		for i, car in enumerate(car_options):
 			if car == "Scarlet" and "Scarlet" not in unlocked_cars:
-				car_text = "Scarlet (Locked)"
+				car_text = "Scarlet (Locked) 75+ Score Required"
 			elif car == "Dust" and "Dust" not in unlocked_cars:
-				car_text = "Dust (Locked)"
+				car_text = "Dust (Locked) 150+ Score Required"
 			else:
 				car_text = car
 
