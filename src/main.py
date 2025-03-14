@@ -48,11 +48,11 @@ SPEED_INCREMENT = 0.05  # speed increment for enemy cars
 SPAWN_ENEMY_EVENT = pygame.USEREVENT + 1
 INITIAL_MIN_SPAWN_INTERVAL = 800  # Initial minimum spawn interval in milliseconds
 INITIAL_MAX_SPAWN_INTERVAL = 1500  # Initial maximum spawn interval in milliseconds
-MIN_SPAWN_INTERVAL = 100  # Minimum spawn interval in milliseconds
+MIN_SPAWN_INTERVAL = 300  # Minimum spawn interval in milliseconds
 MAX_SPAWN_INTERVAL = 2000  # Maximum spawn interval in milliseconds
 MAX_ENEMY_CARS_AT_ONCE = 3  # Maximum number of enemy cars to spawn at once
 ENEMY_CAR_INCREMENT_INTERVAL = 3000  # Interval to increase the number of enemy cars and decrease spawn interval
-FUEL_DECREASE_RATE = 0.05  # Rate at which fuel decreases
+FUEL_DECREASE_RATE = 0.04  # Rate at which fuel decreases
 FUEL_INCREMENT = 20  # Amount of fuel collected per fuel item
 SPAWN_FUEL_EVENT = pygame.USEREVENT + 3
 FUEL_SPAWN_INTERVAL = 4999  # Interval to spawn fuel items in milliseconds
@@ -185,7 +185,7 @@ def reset_game():
 	score = 0
 	ENEMY_CAR_SPEED = 2
 	MAX_ENEMY_CARS_AT_ONCE = 3
-	MIN_SPAWN_INTERVAL = 100
+	MIN_SPAWN_INTERVAL = 200
 	MAX_SPAWN_INTERVAL = 2000
 	pygame.time.set_timer(SPAWN_ENEMY_EVENT, random.randint(INITIAL_MIN_SPAWN_INTERVAL, INITIAL_MAX_SPAWN_INTERVAL))
 	pygame.time.set_timer(pygame.USEREVENT + 2, ENEMY_CAR_INCREMENT_INTERVAL)
